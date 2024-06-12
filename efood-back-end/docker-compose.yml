@@ -1,0 +1,28 @@
+services:
+  ipc_database:
+    image: postgres:16.3-alpine3.20
+    container_name: ipc_database
+    environment:
+      - POSTGRES_DB=ipc
+      - POSTGRES_USER=ipc
+      - POSTGRES_PASSWORD=123
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready", "-d", "ipc"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    ports:
+      - 5432:5432
+
+  ipc_app:
+    image: ipc
+    build: .
+    container_name: ipc_app
+    env_file: docker-compose.env
+    ports:
+      - 8000:8000
+    depends_on:
+      ipc_database:
+        condition: service_healthy
+    volumes:
+      - ./:/app

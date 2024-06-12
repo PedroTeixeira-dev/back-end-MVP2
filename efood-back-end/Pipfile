@@ -1,0 +1,21 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+flask = "==3.0.3"
+flask-openapi3 = "==3.1.1"
+gunicorn = "==22.0.0"
+flask-sqlalchemy = "==3.1.1"
+flask-migrate = "==4.0.7"
+psycopg2-binary = "==2.9.9"
+python-decouple = "==3.8"
+
+[dev-packages]
+ruff = "==0.4.5"
+flake8-pyproject = "==1.2.3"
+flake8 = "==7.0.0"
+
+[requires]
+python_version = "3.12"

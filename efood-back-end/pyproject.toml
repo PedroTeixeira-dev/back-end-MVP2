@@ -1,0 +1,6 @@
+[tool.flake8]
+max-line-length = 119
+
+[tool.ruff]
+line-length = 119
+indent-width = 4
