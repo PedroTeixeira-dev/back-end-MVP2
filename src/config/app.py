@@ -8,7 +8,7 @@ from .database import db, migrate
 def create_app(environment_name: str):
     # Init flask openapi3
     app = OpenAPI(
-        __name__, info=Info(title="IPC API", summary="Super IPC", version="1.0.0"), doc_prefix="/docs", swagger_url="/"
+        __name__, info=Info(title="efood API", summary="Super efood", version="1.0.0"), doc_prefix="/docs", swagger_url="/"
     )
 
     # Load settings
