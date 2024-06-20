@@ -5,7 +5,7 @@ from src.core.models import BaseModel
 class Custumer(BaseModel):
     __tablename__ = "custumers"
 
-    email = db.Column(db.String(30))
+    email = db.Column(db.String(30), unique=True)
     name = db.Column(db.String(50))
     cep = db.Column(db.String(8))
     uf = db.Column(db.String(10))
@@ -38,6 +38,19 @@ class Custumer(BaseModel):
             number=self.number,
             complement=self.complement)
         db.session.add(model)
+        db.session.commit()
+        return model
+
+    def update(self, **kwargs):
+        model = self.__class__(
+            name=self.name,
+            email=self.email,
+            cep=self.cep,
+            uf=self.uf,
+            city=self.city,
+            street=self.street,
+            number=self.number,
+            complement=self.complement)
         db.session.commit()
         return model
 

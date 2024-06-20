@@ -1,9 +1,8 @@
-from flask import request
 from flask_openapi3 import APIBlueprint, Tag
 
 
 from src.custumers.models import Custumer
-from src.custumers.schemas import CustumerDeleteSchema, CustumersPostSchema, CustumersPutSchema
+from src.custumers.schemas import CustumerDeleteSchema, CustumersPostSchema
 
 custumers_api = APIBlueprint(
      "/custumers",
@@ -35,8 +34,8 @@ def create_custumer(body: CustumersPostSchema):
 
 
 @custumers_api.delete("/custumers")
-def delete_custumer(email: CustumerDeleteSchema):
-    email = request.args.get('email')
+def delete_custumer(body: CustumerDeleteSchema):
+    email = body.email
     if not email:
         return {"error": "Email is required to delete a customer"}, 400
 
@@ -49,19 +48,33 @@ def delete_custumer(email: CustumerDeleteSchema):
 
 
 @custumers_api.put("/custumers")
-def update_custumer(body: CustumersPutSchema):
+def update_custumer(body: CustumersPostSchema):
     email = body.email
+    print(f"Received request to update customer with email: {email}")
+
     custumer = Custumer.query.filter_by(email=email).first()
     if not custumer:
+        print("Customer not found")
         return {"error": "Customer not found"}, 404
 
-    custumer.name = body.name
-    custumer.cep = body.cep
-    custumer.uf = body.uf
-    custumer.city = body.city
-    custumer.street = body.street
-    custumer.number = body.number
-    custumer.complement = body.complement
-    custumer.save()
+    print(f"Updating customer: {custumer}")
+
+    try:
+        # Print the received body to debug
+        print("Received body:", body)
+
+        custumer.name = body.name
+        custumer.cep = body.cep
+        custumer.uf = body.uf
+        custumer.city = body.city
+        custumer.street = body.street
+        custumer.number = body.number
+        custumer.complement = body.complement
+
+        custumer.update()
+        print(f"Customer updated successfully: {custumer}")
+    except Exception as e:
+        print(f"An error occurred while updating the customer: {str(e)}")
+        return {"error": f"An error occurred while updating the customer: {str(e)}"}, 500
 
     return {"id": custumer.id, "name": custumer.name}
