@@ -40,3 +40,7 @@ class Custumer(BaseModel):
         db.session.add(model)
         db.session.commit()
         return model
+
+    def delete(self):
+        db.session.delete(self)
+        db.session.commit()
