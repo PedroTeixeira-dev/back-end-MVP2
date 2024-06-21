@@ -20,7 +20,6 @@ def get_custumers():
 
 @custumers_api.post("/custumers")
 def create_custumer(body: CustumersPostSchema):
-    print("#############", body)
     custumer = Custumer(
         name=body.name,
         email=body.email,
