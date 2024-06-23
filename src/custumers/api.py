@@ -20,19 +20,11 @@ def get_custumers():
 
 @custumers_api.post("/custumers")
 def create_custumer(body: CustumersPostSchema):
-    custumer = Custumer(
-        name=body.name,
-        email=body.email,
-        cep=body.cep,
-        uf=body.uf,
-        city=body.city,
-        street=body.street,
-        number=body.number,
-        complement=body.complement).save()
+    custumer = Custumer(**body.dict()).save()
     return {"id": custumer.id, "name": custumer.name}
 
 
-@custumers_api.delete("/custumers")
+@custumers_api.delete("/custumers/{email}")
 def delete_custumer(body: CustumerDeleteSchema):
     email = body.email
     if not email:
