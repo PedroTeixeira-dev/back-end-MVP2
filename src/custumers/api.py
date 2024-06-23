@@ -24,7 +24,7 @@ def create_custumer(body: CustumersPostSchema):
     return {"id": custumer.id, "name": custumer.name}
 
 
-@custumers_api.delete("/custumers/{email}")
+@custumers_api.delete("/custumers/")
 def delete_custumer(body: CustumerDeleteSchema):
     email = body.email
     if not email:
