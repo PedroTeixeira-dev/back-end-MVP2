@@ -1,7 +1,7 @@
-PROJECT_NAME := ipc_app
-DATABASE_NAME := ipc_database
-PYTHON_VERSION := 3.11.0
-VENV_NAME := ipc-$(PYTHON_VERSION)
+PROJECT_NAME := efood_app
+DATABASE_NAME := efood_database
+PYTHON_VERSION := 3.12
+VENV_NAME := efood-$(PYTHON_VERSION)
 
 .ONESHELL:
 .SHELLFLAGS = -e -c
