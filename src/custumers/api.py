@@ -1,4 +1,5 @@
 from flask_openapi3 import APIBlueprint, Tag
+from flask_cors import CORS
 
 
 from src.custumers.models import Custumer
@@ -11,6 +12,7 @@ custumers_api = APIBlueprint(
      abp_tags=[Tag(name="Custumers", description="Random custumers")],
      doc_ui=True,
  )
+CORS(custumers_api, origins="http://localhost:3000")
 
 
 @custumers_api.get("/custumers")
