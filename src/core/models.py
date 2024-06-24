@@ -12,8 +12,7 @@ class BaseModel(db.Model):
     created_at = db.Column(db.DateTime(), default=datetime.now)
     updated_at = db.Column(db.DateTime(), default=datetime.now, onupdate=datetime.now)
 
-#    def save(self, **kwargs):
- #       model = self.__class__(name=self.name)
-  #      db.session.add(model)
-   #     db.session.commit()
-    #    return model
+    def save(self, **kwargs):
+        db.session.add(self)
+        db.session.commit()
+        return self
