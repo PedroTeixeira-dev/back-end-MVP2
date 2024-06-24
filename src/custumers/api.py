@@ -1,5 +1,5 @@
+import string
 from flask_openapi3 import APIBlueprint, Tag
-from flask_cors import CORS
 
 
 from src.custumers.models import Custumer
@@ -12,18 +12,37 @@ custumers_api = APIBlueprint(
      abp_tags=[Tag(name="Custumers", description="Random custumers")],
      doc_ui=True,
  )
-CORS(custumers_api, origins="http://localhost:3000")
 
 
 @custumers_api.get("/custumers")
-def get_custumers():
-    return [{"id": custumer.id, "name": custumer.name, "cep": custumer.cep, "email": custumer.email} for custumer in Custumer.query.all()]
+def get_all_custumers():
+    return [{"id": custumer.id, "name": custumer.name, "cep": custumer.cep, "email": custumer.email}
+            for custumer in Custumer.query.all()]
+
+
+@custumers_api.get("/custumers/<string:email>")
+def get_custumer_by_email(email: string):
+    custumer = Custumer.query.filter_by(email=email).first()
+    if not custumer:
+        return {"error": "Customer not found"}, 404
+
+    return {
+        "id": custumer.id,
+        "name": custumer.name,
+        "cep": custumer.cep,
+        "email": custumer.email,
+        "uf": custumer.uf,
+        "city": custumer.city,
+        "street": custumer.street,
+        "number": custumer.number,
+        "complement": custumer.complement,
+    }
 
 
 @custumers_api.post("/custumers")
 def create_custumer(body: CustumersPostSchema):
     custumer = Custumer(**body.dict()).save()
-    return {"id": custumer.id, "name": custumer.name}
+    return {"id": custumer.email, "name": custumer.name}
 
 
 @custumers_api.delete("/custumers/")
@@ -53,7 +72,6 @@ def update_custumer(body: CustumersPostSchema):
     print(f"Updating customer: {custumer}")
 
     try:
-        # Print the received body to debug
         print("Received body:", body)
 
         custumer.name = body.name
