@@ -1,9 +1,8 @@
-import string
 from flask_openapi3 import APIBlueprint, Tag
 
 
 from src.custumers.models import Custumer
-from src.custumers.schemas import CustumerDeleteSchema, CustumersPostSchema
+from src.custumers.schemas import CustumersPostSchema, CustumersResponseSchema, EmailPath
 
 custumers_api = APIBlueprint(
      "/custumers",
@@ -21,13 +20,15 @@ def get_all_custumers():
 
 
 @custumers_api.get("/custumers/<string:email>")
-def get_custumer_by_email(email: string):
-    custumer = Custumer.query.filter_by(email=email).first()
+def get_custumer_by_email(path: EmailPath,
+                          responses={200: CustumersResponseSchema}):
+    print("############", path)
+    custumer = Custumer.query.filter_by(email=path.email).first()
+    print("#########", custumer)
     if not custumer:
         return {"error": "Customer not found"}, 404
 
     return {
-        "id": custumer.id,
         "name": custumer.name,
         "cep": custumer.cep,
         "email": custumer.email,
@@ -45,9 +46,9 @@ def create_custumer(body: CustumersPostSchema):
     return {"id": custumer.email, "name": custumer.name}
 
 
-@custumers_api.delete("/custumers/")
-def delete_custumer(body: CustumerDeleteSchema):
-    email = body.email
+@custumers_api.delete("/custumers/<string:email>")
+def delete_custumer(path: EmailPath):
+    email = path.email
     if not email:
         return {"error": "Email is required to delete a customer"}, 400
 
