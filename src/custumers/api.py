@@ -22,9 +22,7 @@ def get_all_custumers():
 @custumers_api.get("/custumers/<string:email>")
 def get_custumer_by_email(path: EmailPath,
                           responses={200: CustumersResponseSchema}):
-    print("############", path)
     custumer = Custumer.query.filter_by(email=path.email).first()
-    print("#########", custumer)
     if not custumer:
         return {"error": "Customer not found"}, 404
 
