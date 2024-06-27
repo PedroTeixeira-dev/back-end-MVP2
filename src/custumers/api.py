@@ -2,7 +2,7 @@ from flask_openapi3 import APIBlueprint, Tag
 
 
 from src.custumers.models import Custumer
-from src.custumers.schemas import CustumerDeleteSchema, CustumersPostSchema
+from src.custumers.schemas import CustumersPostSchema, CustumersResponseSchema, EmailPath
 
 custumers_api = APIBlueprint(
      "/custumers",
@@ -14,27 +14,39 @@ custumers_api = APIBlueprint(
 
 
 @custumers_api.get("/custumers")
-def get_custumers():
-    return [{"id": custumer.id, "name": custumer.name, "cep": custumer.cep, "email": custumer.email} for custumer in Custumer.query.all()]
+def get_all_custumers():
+    return [{"id": custumer.id, "name": custumer.name, "cep": custumer.cep, "email": custumer.email}
+            for custumer in Custumer.query.all()]
+
+
+@custumers_api.get("/custumers/<string:email>")
+def get_custumer_by_email(path: EmailPath,
+                          responses={200: CustumersResponseSchema}):
+    custumer = Custumer.query.filter_by(email=path.email).first()
+    if not custumer:
+        return {"error": "Customer not found"}, 404
+
+    return {
+        "name": custumer.name,
+        "cep": custumer.cep,
+        "email": custumer.email,
+        "uf": custumer.uf,
+        "city": custumer.city,
+        "street": custumer.street,
+        "number": custumer.number,
+        "complement": custumer.complement,
+    }
 
 
 @custumers_api.post("/custumers")
 def create_custumer(body: CustumersPostSchema):
-    custumer = Custumer(
-        name=body.name,
-        email=body.email,
-        cep=body.cep,
-        uf=body.uf,
-        city=body.city,
-        street=body.street,
-        number=body.number,
-        complement=body.complement).save()
-    return {"id": custumer.id, "name": custumer.name}
+    custumer = Custumer(**body.dict()).save()
+    return {"id": custumer.email, "name": custumer.name}
 
 
-@custumers_api.delete("/custumers")
-def delete_custumer(body: CustumerDeleteSchema):
-    email = body.email
+@custumers_api.delete("/custumers/<string:email>")
+def delete_custumer(path: EmailPath):
+    email = path.email
     if not email:
         return {"error": "Email is required to delete a customer"}, 400
 
@@ -59,7 +71,6 @@ def update_custumer(body: CustumersPostSchema):
     print(f"Updating customer: {custumer}")
 
     try:
-        # Print the received body to debug
         print("Received body:", body)
 
         custumer.name = body.name
