@@ -2,7 +2,7 @@
 
 ## Objective: Create routes for customers to be created, edited, searched, and deleted, as well as stored in a database.
 
-## Requests can be made through the front-end created at the link: or by using Postman and similar tools.
+## Requests can be made through the front-end created at the link: https://github.com/PedroTeixeira-dev/MVP2---Front/tree/main/cadastro-mvp or by using Postman and similar tools.
 
 ### Runing the project with docker
 
